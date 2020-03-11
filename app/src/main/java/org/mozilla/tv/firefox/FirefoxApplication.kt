@@ -113,7 +113,7 @@ open class FirefoxApplication : LocaleAwareApplication() {
 
     private fun initGlean() {
         setGleanUpload()
-        Glean.initialize(applicationContext)
+        Glean.initialize(applicationContext, false)
     }
 
     // ServiceLocator needs to be created in onCreate in order to accept Application

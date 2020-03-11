@@ -4,6 +4,7 @@
 
 package org.mozilla.tv.firefox.pocket
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.VisibleForTesting.PRIVATE
 import androidx.lifecycle.Lifecycle.Event.ON_START
@@ -25,6 +26,7 @@ private const val FETCH_UNIQUE_WORK_NAME = "PocketFetch"
  * Schedules background fetches of the Pocket video data.
  */
 class PocketVideoFetchScheduler(
+    private val context: Context,
     private val isPocketEnabledByLocale: () -> Boolean
 ) : LifecycleObserver {
     private var qaFetchDelayOverrideMillis: Long? = null
@@ -33,7 +35,7 @@ class PocketVideoFetchScheduler(
 
     @OnLifecycleEvent(ON_START)
     fun onStart() {
-        schedulePocketBackgroundFetch(WorkManager.getInstance())
+        schedulePocketBackgroundFetch(WorkManager.getInstance(context))
     }
 
     @VisibleForTesting(otherwise = PRIVATE)

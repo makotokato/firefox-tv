@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat.startActivity
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import mozilla.components.browser.errorpages.ErrorPages
 import mozilla.components.browser.errorpages.ErrorType
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
@@ -27,7 +28,7 @@ class CustomContentRequestInterceptor(
 
     private var currentPageURL = ""
 
-    override fun onLoadRequest(session: EngineSession, uri: String): RequestInterceptor.InterceptionResponse.Content? {
+    override fun onLoadRequest(engineSession: EngineSession, uri: String, hasUserGesture: Boolean, isSameDomain: Boolean): RequestInterceptor.InterceptionResponse? {
         currentPageURL = uri
 
         return when (uri) {
@@ -56,9 +57,7 @@ class CustomContentRequestInterceptor(
     }
 
     override fun onErrorRequest(session: EngineSession, errorType: ErrorType, uri: String?): RequestInterceptor.ErrorResponse? {
-        return uri?.let {
-            val data = ErrorPage.loadErrorPage(context, uri, errorType)
-            RequestInterceptor.ErrorResponse(data, uri)
-        }
+        val errorPage = ErrorPages.createErrorPage(context, errorType, uri)
+        return RequestInterceptor.ErrorResponse.Content(errorPage)
     }
 }
